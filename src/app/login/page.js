@@ -1,4 +1,5 @@
 'use client';
+import styles from "@/app/page.module.scss";
 import Input from '@/components/UI/Input';
 import Button from '@/components/UI/Button';
 import { useState } from 'react';
@@ -19,14 +20,12 @@ export default function Page() {
     }
 
     return (
-      <>
+      <form onSubmit={(e)=> submit(e)} className={`${styles.wrapper} ${styles.small}`}>
         <h1>Connexion</h1>
-        <form onSubmit={(e)=> submit(e)}>
-            <Input label={'Adresse email'} name={'email'} value={userForm.email} placeholder={'email'} type={'email'} onChange={(e) => handleChange(e)} isRequired={true} />
-            <Input label={'Mot de passe'} name={'password'} value={userForm.password} placeholder={'mot de passe'} type={'password'} onChange={(e) => handleChange(e)} isRequired={true} />
-            <Button type={'submit'} title={'Se connecter'}/>
-        </form>
-      </>
+        <Input label={'Adresse email'} name={'email'} value={userForm.email} placeholder={'email'} type={'email'} onChange={(e) => handleChange(e)} isRequired={true} />
+        <Input label={'Mot de passe'} name={'password'} value={userForm.password} placeholder={'mot de passe'} type={'password'} onChange={(e) => handleChange(e)} isRequired={true} />
+        <Button type={'submit'} title={'Se connecter'}/>
+      </form>
     );
   }
   

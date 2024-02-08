@@ -1,6 +1,8 @@
+import styles from './index.module.scss'
+
 const Index = ({ type, title }) => {
     return (
-        <button type={type}>{title}</button>
+        <button className={`${styles.Button}`} type={type}>{title}</button>
     );
 }
 
