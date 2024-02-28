@@ -1,7 +1,8 @@
 'use client';
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FetchApi from '@/components/useFetch'
 import Edit from '@/components/Edit'
+import Link from 'next/link'
 
 // appelé apres avoir remplie le form,
 // il doit fetch la bonne route en fonction des args
@@ -51,6 +52,7 @@ const Index = ({ title, db_name, Card, Form }) => {
                         data={selectedData}
                         edit={isEdit}
                         FormData={Form}
+                        db_name={db_name}
                     />
                 )
             }
@@ -66,6 +68,9 @@ const Index = ({ title, db_name, Card, Form }) => {
                             setOpenForm(true)
                             setIsEdit(true)
                         }}>edit</button>
+                        <Link href={`/${db_name}/${data.id}`}>
+                            <p>voir</p>
+                        </Link>
                     </div>
                 ))
             }

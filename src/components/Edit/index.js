@@ -9,7 +9,7 @@ import FetchApi from "../useFetch";
 
 
 
-const Index = ({ setIsOpen, data, FormData }) => {
+const Index = ({ setIsOpen, data, FormData, db_name }) => {
     const [dataForm, setDataForm] = useState();
     const [loading, setLoading] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -59,7 +59,7 @@ const Index = ({ setIsOpen, data, FormData }) => {
         setLoading(true)
         if (edit) {
             // run edit request
-            FetchApi({ url: `/api/products/${dataForm.id}`, method: 'PUT', body: dataForm }).then(({ message, success }) => {
+            FetchApi({ url: `/api/${db_name}/${dataForm.id}`, method: 'PUT', body: dataForm }).then(({ message, success }) => {
                 if (success) {
                     console.log("result : ", message)
                     setLoading(false)
@@ -71,7 +71,7 @@ const Index = ({ setIsOpen, data, FormData }) => {
             })
         } else {
             // run add request
-            FetchApi({ url: `/api/products`, method: 'POST', body: dataForm }).then(({ message, success }) => {
+            FetchApi({ url: `/api/${db_name}/`, method: 'POST', body: dataForm }).then(({ message, success }) => {
                 if (success) {
                     console.log("result : ", message)
                     setLoading(false)

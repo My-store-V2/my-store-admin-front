@@ -1,5 +1,5 @@
 
-const Index = ({ dataForm: ProductForm, handleChange, handleImage, handleVideo, deleteElement }) => {
+const Index = ({ dataForm: ProductForm, handleChange, handleImage, deleteElement }) => {
     return (
         <>
             <input
