@@ -1,9 +1,12 @@
+import React from "react";
+import Input from "../Input";
+
+import "./userFormStyles.scss";
 
 const Index = ({ dataForm: ProductForm, handleChange }) => {
-
     return (
-        <>
-            <input
+        <div className="form__group">
+            <Input
                 label="firstname"
                 type="text"
                 name="firstname"
@@ -12,7 +15,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="firstname"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="lastname"
                 type="text"
                 name="lastname"
@@ -21,7 +24,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="lastname"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="email"
                 type="email"
                 name="email"
@@ -30,7 +33,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="email"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="address"
                 type="text"
                 name="address"
@@ -38,7 +41,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="address"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="zipcode"
                 type="number"
                 name="zipcode"
@@ -46,7 +49,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="zipcode"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="city"
                 type="text"
                 name="city"
@@ -54,7 +57,7 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="city"
                 onChange={(e) => handleChange(e)}
             />
-            <input
+            <Input
                 label="phone"
                 type="number"
                 name="phone"
@@ -62,16 +65,8 @@ const Index = ({ dataForm: ProductForm, handleChange }) => {
                 placeholder="phone"
                 onChange={(e) => handleChange(e)}
             />
-            <input
-                label="admin"
-                type="checkbox"
-                name="admin"
-                value={ProductForm?.admin}
-                placeholder="admin"
-                onChange={(e) => handleChange(e)}
-            />
-        </>
+        </div>
     );
-}
+};
 
 export default Index;
