@@ -4,8 +4,11 @@ import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
 import FetchApi from "@/components/useFetch";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+    const router = useRouter()
+    
     const [userForm, setUserForm] = useState({
         email: "",
         password: "",
@@ -19,16 +22,17 @@ export default function Page() {
         e.preventDefault();
 
         FetchApi({
-            url: `/api/auth/signin`,
-            method: "POST",
-            body: userForm,
-            token: null,
+          url: `/api/auth/signin`,
+          method: "POST",
+          body: userForm,
+          token: null,
         }).then(({ token, success }) => {
-            if (success) {
-                localStorage.setItem("token", `Bearer ${token}`);
-            } else {
-                console.log("success : ", success);
-            }
+          if (success) {
+            localStorage.setItem("token", `Bearer ${token}`);
+            router.push("/");
+          } else {
+            console.log("success : ", success);
+          }
         });
     };
 
