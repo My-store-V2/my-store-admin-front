@@ -69,6 +69,14 @@ const Index = ({ dataForm: ProductForm, handleChange, handleImage, deleteElement
                 placeholder="Article packshot"
                 onChange={(e) => handleImage(e)}
             />
+            <input
+                label="désactiver"
+                type="checkBox"
+                name="active"
+                value={ProductForm?.active}
+                placeholder="Product Disable"
+                onChange={(e) => handleChange(e)}
+            />
         </>
     );
 }
