@@ -7,7 +7,7 @@ const FetchApi = async ({ url, method, body }) => {
     });
     try {
         const token = await localStorage.getItem('token');
-        const responsePromise = fetch(`https://backend-api-dev-rob6.onrender.com${url}`, {
+        const responsePromise = fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
             headers: {
                 "Content-Type": "Application/json",
                 ...token && {
