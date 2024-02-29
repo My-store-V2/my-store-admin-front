@@ -37,7 +37,13 @@ export default function Page() {
             onSubmit={(e) => submit(e)}
             className={`${styles.wrapper} ${styles.small}`}
         >
-            <h1>Connexion</h1>
+            <h1
+                style={{
+                    marginBottom: "20px",
+                }}
+            >
+                Connexion
+            </h1>
             <Input
                 label={"Adresse email"}
                 name={"email"}
