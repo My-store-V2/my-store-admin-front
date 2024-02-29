@@ -56,26 +56,28 @@ const Index = ({ title, db_name, Card, Form }) => {
                 )
             }
 
-            <h1>{title}</h1>
-            {
-                dataList.map((data) => (
-                    <div key={data.id} className={`${styles.list}`}>
-                        <Card key={data.id} data={data} />
-                        <div className={`${styles.flexrow}`}>
-                            <Button className={'red'} clickHandler={() => deleteData(data.id)} title={'delete'} />
-                            <Button clickHandler={() => { setSelectedData(data); setOpenForm(true); setIsEdit(true); }} title={'edit'}/>
-                            <Link href={`/${db_name}/${data.id}`}>
-                                <p>voir</p>
-                            </Link>
+            <div className={`${styles.center}`}>
+                <h1>{title}</h1>
+                {
+                    dataList.map((data) => (
+                        <div key={data.id} className={`${styles.list} ${title === 'product' ? styles.small : ''}`}>
+                            <Card key={data.id} data={data} />
+                            <div className={`${styles.flexrow}`}>
+                                <Button className={'red'} clickHandler={() => deleteData(data.id)} title={'delete'} />
+                                <Button clickHandler={() => { setSelectedData(data); setOpenForm(true); setIsEdit(true); }} title={'edit'}/>
+                                <Link href={`/${db_name}/${data.id}`}>
+                                    <p>voir</p>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                ))
-            }
-            <button onClick={() => {
-                setSelectedData(null)
-                setOpenForm(true)
-                setIsEdit(false)
-            }}>add</button>
+                    ))
+                }
+                <Button clickHandler={() => {
+                    setSelectedData(null)
+                    setOpenForm(true)
+                    setIsEdit(false)
+                }} title={'add'}/>
+            </div>
         </>
     );
 }

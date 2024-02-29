@@ -3,5 +3,17 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    text-align: center;
     gap: 25px;
+    height: 100%;
+}
+
+.flexrow {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+.flexcolumn {
+    display: flex;
+    flex-direction: column;
 }
