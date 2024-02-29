@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import FetchApi from '@/components/useFetch'
 import Edit from '@/components/Edit'
 import Link from 'next/link'
+import Button from '@/components/UI/Button'
 
 // appelé apres avoir remplie le form,
 // il doit fetch la bonne route en fonction des args
@@ -13,11 +14,8 @@ const Index = ({ title, db_name, Card, Form }) => {
     const [selectedData, setSelectedData] = useState()
     const [isEdit, setIsEdit] = useState(false)
 
-    const method = "GET";
-
-
     const fetchData = () => {
-        FetchApi({ url: `/api/${db_name}`, method: 'GET' }).then(({ results, success }) => {
+        FetchApi({ url: `/api/${db_name}`, method: 'GET'}).then(({ results, success }) => {
             if (success) {
                 console.log("result : ", results)
                 setDataList(results)
@@ -62,12 +60,8 @@ const Index = ({ title, db_name, Card, Form }) => {
                 dataList.map((data) => (
                     <div key={data.id}>
                         <Card key={data.id} data={data} />
-                        <button onClick={() => deleteData(data.id)}>delete</button>
-                        <button onClick={() => {
-                            setSelectedData(data)
-                            setOpenForm(true)
-                            setIsEdit(true)
-                        }}>edit</button>
+                        <Button clickHandler={() => deleteData(data.id)} title={'delete'} />
+                        <Button clickHandler={() => { setSelectedData(data); setOpenForm(true); setIsEdit(true); }} title={'edit'}/>
                         <Link href={`/${db_name}/${data.id}`}>
                             <p>voir</p>
                         </Link>

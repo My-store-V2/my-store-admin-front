@@ -1,8 +1,8 @@
 import styles from './index.module.scss'
 
-const Index = ({ type, title }) => {
+const Index = ({ type, title, clickHandler }) => {
     return (
-        <button className={`${styles.Button}`} type={type}>{title}</button>
+        <button className={`${styles.Button}`} type={type} onClick={clickHandler}>{title}</button>
     );
 }
 

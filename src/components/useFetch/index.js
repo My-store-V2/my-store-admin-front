@@ -1,11 +1,12 @@
 
-const FetchApi = async ({ url, method, body, token }) => {
+const FetchApi = async ({ url, method, body }) => {
     const timeout = new Promise((resolve, reject) => {
         setTimeout(() => {
             reject(new Error('Request timed out'));
         }, 100000);
     });
     try {
+        const token = await localStorage.getItem('token');
         const responsePromise = fetch(`https://backend-api-dev-rob6.onrender.com${url}`, {
             headers: {
                 "Content-Type": "Application/json",

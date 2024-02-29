@@ -59,7 +59,7 @@ const Index = ({ setIsOpen, data, FormData, db_name }) => {
         setLoading(true)
         if (edit) {
             // run edit request
-            FetchApi({ url: `/api/${db_name}/${dataForm.id}`, method: 'PUT', body: dataForm }).then(({ message, success }) => {
+            FetchApi({ url: `/api/${db_name}/${dataForm.id}`, method: 'PUT', body: dataForm}).then(({ message, success }) => {
                 if (success) {
                     console.log("result : ", message)
                     setLoading(false)

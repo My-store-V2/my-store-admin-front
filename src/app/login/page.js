@@ -2,6 +2,7 @@
 import styles from "@/app/page.module.scss";
 import Input from '@/components/UI/Input';
 import Button from '@/components/UI/Button';
+import FetchApi from '@/components/useFetch'
 import { useState } from 'react';
 
 export default function Page() {
@@ -16,7 +17,14 @@ export default function Page() {
 
     const submit = async (e) => {
         e.preventDefault();
-        console.log(userForm.email, userForm.password);
+
+        FetchApi({ url: `/api/auth/signin`, method: 'POST', body: userForm, token: null}).then(({ token, success }) => {
+          if (success) {
+            localStorage.setItem('token', token)
+          } else {
+            console.log("success : ", success)
+          }
+        })
     }
 
     return (
