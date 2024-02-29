@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 # lien du front déployé
 ## lien du front prod :
-https://my-store-front.netlify.app/
+https://my-store-admin-front.netlify.app/
 
 ## Getting Started
 
