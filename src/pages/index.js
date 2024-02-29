@@ -1,10 +1,11 @@
+import styles from "@/app/page.module.scss";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <Link href={"/users"}>Utilisateurs</Link>
-      <Link href={"/products"}>Produits</Link>
-    </>
+    <div className={`${styles.container} ${styles.small}`}>
+      <Link className={`${styles.button}`} href={"/users"}>Utilisateurs</Link>
+      <Link className={`${styles.button}`} href={"/products"}>Produits</Link>
+    </div>
   );
 }

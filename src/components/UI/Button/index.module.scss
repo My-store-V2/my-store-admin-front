@@ -2,6 +2,7 @@
 
 .Button {
     width: 100%;
+    max-width: 100px;
     height: 35px;
     background-color: $primary-color;
     color: white;
@@ -12,5 +13,13 @@
     
     &:hover {
         background-color: $hover-color;
+    }
+
+    &.red {
+        background-color: $red;
+    }
+
+    &.large {
+        max-width: 100%;
     }
 }

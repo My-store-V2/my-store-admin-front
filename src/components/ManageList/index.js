@@ -1,4 +1,5 @@
 'use client';
+import styles from "@/app/page.module.scss";
 import { useEffect, useState } from "react";
 import FetchApi from '@/components/useFetch'
 import Edit from '@/components/Edit'
@@ -58,13 +59,15 @@ const Index = ({ title, db_name, Card, Form }) => {
             <h1>{title}</h1>
             {
                 dataList.map((data) => (
-                    <div key={data.id}>
+                    <div key={data.id} className={`${styles.list}`}>
                         <Card key={data.id} data={data} />
-                        <Button clickHandler={() => deleteData(data.id)} title={'delete'} />
-                        <Button clickHandler={() => { setSelectedData(data); setOpenForm(true); setIsEdit(true); }} title={'edit'}/>
-                        <Link href={`/${db_name}/${data.id}`}>
-                            <p>voir</p>
-                        </Link>
+                        <div className={`${styles.flexrow}`}>
+                            <Button className={'red'} clickHandler={() => deleteData(data.id)} title={'delete'} />
+                            <Button clickHandler={() => { setSelectedData(data); setOpenForm(true); setIsEdit(true); }} title={'edit'}/>
+                            <Link href={`/${db_name}/${data.id}`}>
+                                <p>voir</p>
+                            </Link>
+                        </div>
                     </div>
                 ))
             }

@@ -20,7 +20,7 @@ export default function Page() {
 
         FetchApi({ url: `/api/auth/signin`, method: 'POST', body: userForm, token: null}).then(({ token, success }) => {
           if (success) {
-            localStorage.setItem('token', token)
+            localStorage.setItem('token', `Bearer ${token}`)
           } else {
             console.log("success : ", success)
           }
@@ -32,7 +32,7 @@ export default function Page() {
         <h1>Connexion</h1>
         <Input label={'Adresse email'} name={'email'} value={userForm.email} placeholder={'email'} type={'email'} onChange={(e) => handleChange(e)} isRequired={true} />
         <Input label={'Mot de passe'} name={'password'} value={userForm.password} placeholder={'mot de passe'} type={'password'} onChange={(e) => handleChange(e)} isRequired={true} />
-        <Button type={'submit'} title={'Se connecter'}/>
+        <Button className={'large'} type={'submit'} title={'Se connecter'}/>
       </form>
     );
   }
