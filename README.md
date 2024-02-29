@@ -4,6 +4,11 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## lien du front prod :
 https://my-store-admin-front.netlify.app/
 
+# Connexion au backoffice
+"email": "admin@mystore.com",
+"password": "adminpassword"
+
+
 ## Getting Started
 
 First, run the development server:
