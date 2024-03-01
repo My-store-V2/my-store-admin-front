@@ -1,0 +1,53 @@
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #0000005c;
+    top: 0;
+    z-index: 999998;
+}
+
+.modal {
+    padding: 20px;
+    position: fixed;
+    width: 50vw;
+    background: white;
+    z-index: 999999;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-50%);
+    max-height: 90vh;
+    overflow: auto;
+
+    .header {
+        padding: 10px 0px;
+        position: relative;
+
+        h2 {
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+
+        }
+
+        button {
+            background: transparent;
+            border: none;
+            position: absolute;
+            right: 2%;
+            top: 2%;
+            cursor: pointer;
+
+            
+        }
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+    .modal {
+        width: 90%;
+        height: 90vh;
+    }
+}
