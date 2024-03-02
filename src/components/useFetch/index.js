@@ -1,3 +1,4 @@
+import Router from 'next/router'
 
 const FetchApi = async ({ url, method, body }) => {
     const timeout = new Promise((resolve, reject) => {
@@ -24,6 +25,10 @@ const FetchApi = async ({ url, method, body }) => {
         const dataJson = await response.json();
 
         let status_code = response.status;
+        
+        if (status_code == 401) {
+            Router.push('/login')
+        }
         if (status_code < 200 || status_code >= 300) {
             throw new Error(dataJson.message);
         }
