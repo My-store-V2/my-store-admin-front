@@ -25,24 +25,20 @@
 
         h2 {
             text-transform: uppercase;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 1.5rem;
             font-weight: 500;
-
         }
 
         button {
             background: transparent;
             border: none;
             position: absolute;
-            right: 2%;
-            top: 2%;
+            right: -0.5rem;
+            top: -0.5rem;
             cursor: pointer;
-
-            
         }
     }
-
 }
 
 @media screen and (max-width: 1000px) {
