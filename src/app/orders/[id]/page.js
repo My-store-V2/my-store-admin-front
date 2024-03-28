@@ -14,7 +14,6 @@ function Order() {
     useEffect(() => {
         FetchApi({ url: `/api/orders/${id}`, method: "GET" }).then((data) => {
             setOrder(data);
-            console.log(data.results);
         });
     }, [id]);
     return (
