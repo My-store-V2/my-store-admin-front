@@ -97,9 +97,16 @@ const Index = ({
                     label="disable"
                     type="checkBox"
                     name="active"
-                    value={ProductForm?.active}
+                    checked={!ProductForm?.active}
                     placeholder="Product Disable"
-                    onChange={(e) => handleChange(e)}
+                    onChange={(e) =>
+                        handleChange({
+                            target: {
+                                name: "active",
+                                value: !ProductForm?.active,
+                            },
+                        })
+                    }
                 />
             </div>
         </div>

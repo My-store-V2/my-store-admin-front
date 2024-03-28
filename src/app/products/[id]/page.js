@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import CircumIcon from "@klarr-agency/circum-icons-react";
-
+import FetchApi from "@/components/useFetch";
 import "./styles.scss";
 
 export default function Page() {
@@ -14,22 +14,21 @@ export default function Page() {
     const [imgSelected, setImgSelected] = useState(product?.packshot);
 
     useEffect(() => {
-        fetch(`https://backend-api-dev-rob6.onrender.com/api/products/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setProduct(data.results);
-                setImgSelected(data.results.packshot);
-            })
-            .catch((error) => console.error("Error fetching product", error));
+        FetchApi({ url: `/api/products/${id}`, method: "GET" }).then((data) => {
+            setProduct(data.results);
+            setImgSelected(data?.results.packshot);
+        });
     }, [id]);
 
     return (
         <div className="product__container">
-            <div
-                className="product__container__header"
-                onClick={() => router.back()}
-            >
-                <CircumIcon name="circle_chev_left" />
+            <div className="product__container__header">
+                <div
+                    className="product__container__header__back"
+                    onClick={() => router.back()}
+                >
+                    <CircumIcon name="circle_chev_left" />
+                </div>
             </div>
             {product && (
                 <div className="product__container__content">
@@ -82,7 +81,7 @@ export default function Page() {
                             {product?.description}
                         </p>
                         <p className="product__info__price">
-                            ${product?.price}
+                            {product?.price} EUR
                         </p>
                     </div>
                 </div>
