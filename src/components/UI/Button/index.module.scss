@@ -1,0 +1,32 @@
+@import '../../../app/variables.scss';
+
+.Button {
+    width: 100px;
+    max-width: 100px;
+    height: 35px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    margin: 15px 0;
+    cursor: pointer;
+    
+    &:hover {
+        color: $primary-color;
+        background-color: $background;
+        border: 1px solid $primary-color;
+    }
+
+    &.red {
+        background-color: $red;
+        &:hover {
+            background-color: $red-hover;
+            color: white;
+            border: none;
+        }
+    }
+
+    &.large {
+        width: 100%;
+        max-width: 100%;
+    }
+}

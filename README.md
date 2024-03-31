@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# lien du front déployé
+## lien du front dev :
+https://my-store-admin-front-dev.netlify.app/
+## lien du front prod : 
+https://my-store-admin-front-prod.netlify.app/
+
+# Connexion au backoffice
+"email": "admin@mystore.com",
+"password": "adminpassword"
+
+
 ## Getting Started
 
 First, run the development server:
