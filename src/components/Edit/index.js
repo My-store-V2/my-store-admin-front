@@ -5,9 +5,15 @@ import Button from "@/components/UI/Button";
 import { useEffect, useState } from "react";
 import FetchApi from "../useFetch";
 
-const Index = ({ setIsOpen, data, FormData, db_name }) => {
+const Index = ({
+    setIsOpen,
+    data,
+    FormData,
+    db_name,
+    dataList,
+    setDataList,
+}) => {
     const [dataForm, setDataForm] = useState();
-    const [loading, setLoading] = useState(false);
     const [edit, setEdit] = useState(false);
 
     // handle change input
@@ -19,7 +25,7 @@ const Index = ({ setIsOpen, data, FormData, db_name }) => {
     const handleImage = async (e) => {
         if (e?.target?.files[0] == undefined || e?.target?.files[0] == null)
             return console.log("no image");
-        setLoading(true);
+
         // preview image
         const preview_url = URL.createObjectURL(e.target.files[0]);
         // convert image to base64 and set it to dataForm state
@@ -34,7 +40,6 @@ const Index = ({ setIsOpen, data, FormData, db_name }) => {
                 [e.target.name]: preview_url,
             });
         };
-        setLoading(false);
     };
 
     // delete element (image, file, video, etc...)
@@ -52,46 +57,49 @@ const Index = ({ setIsOpen, data, FormData, db_name }) => {
     // submit form (edit or add data)
     const submitForm = async (e) => {
         e.preventDefault();
-        setLoading(true);
         if (edit) {
             // run edit request
-            FetchApi({
+            const result = FetchApi({
                 url: `/api/${db_name}/${dataForm.id}`,
                 method: "PUT",
                 body: dataForm,
-            }).then(({ message, success }) => {
-                if (success) {
-                    console.log("result : ", message);
-                    setLoading(false);
+            })
+                .then((response) => {
+                    setDataList(
+                        dataList.map((data) =>
+                            data.id == response.results.id
+                                ? response.results
+                                : data
+                        )
+                    );
                     setIsOpen(false);
-                } else {
-                    console.log("message : ", message);
-                    setLoading(false);
-                }
-            });
+                })
+                .catch((error) => {
+                    console.log("error : ", error);
+                });
         } else {
             // run add request
             FetchApi({
-                url: `/api/${db_name}/`,
+                url: `/api/${db_name}`,
                 method: "POST",
                 body: dataForm,
-            }).then(({ message, success }) => {
-                if (success) {
-                    console.log("result : ", message);
-                    setLoading(false);
+            })
+                .then((response) => {
+                    setDataList([...dataList, response.results]);
                     setIsOpen(false);
-                } else {
-                    console.log("success : ", message);
-                    setLoading(false);
-                }
-            });
+                })
+                .catch((error) => {
+                    console.log("error : ", error);
+                });
         }
     };
 
     // modal component
     return (
-        <Modal title="Modify" closeModal={() => setIsOpen(false)}>
-            {/* {loading ? <Loading /> : ( */}
+        <Modal
+            title={edit ? "Modify" : "Add"}
+            closeModal={() => setIsOpen(false)}
+        >
             <form
                 onSubmit={(e) => {
                     submitForm(e);
@@ -118,7 +126,6 @@ const Index = ({ setIsOpen, data, FormData, db_name }) => {
                     />
                 )}
             </form>
-            {/* )} */}
         </Modal>
     );
 };

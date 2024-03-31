@@ -1,14 +1,27 @@
-@import './variables.scss';
+@import "./variables.scss";
 
 .center {
- width: 100%;
- min-height: 90vh;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
 }
 
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    max-width: 100%;
+}
+
+.listTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 2rem;
+}
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -20,7 +33,7 @@
     width: 80%;
     max-width: 80%;
     gap: 20px;
-    
+
     &.small {
         max-width: 600px;
         width: 400px;
@@ -46,17 +59,6 @@
     width: 80%;
     max-width: 80%;
     gap: 15px;
-
-    &.small {
-        max-width: 600px;
-        width: 400px;
-    }
-    &.medium {
-    }
-    &.large {
-        max-width: 80%;
-        width: 80%;
-    }
 }
 
 .button {
@@ -66,14 +68,14 @@
     background-color: $primary-color;
     text-align: center;
     justify-content: center;
-    text-decoration: none;  
+    text-decoration: none;
     color: white;
     border: none;
     border-radius: 8px;
     margin: 15px 0;
     cursor: pointer;
     font-size: 20px;
-    
+
     &:hover {
         background-color: $hover-color;
     }
@@ -107,4 +109,21 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.content {
+    display: grid;
+    // This will create a layout with a minimum of 300px for each card and maximum of 1fr (fraction of available space).
+    // It will automatically fill the row with as many cards as it can, aiming for 3 cards in a row based on the minmax specification.
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem; // Space between each card
+    justify-content: center; // Center the cards in the container
+    align-items: center; // Align items at the start of each card
+    width: 100%; // Full width of the parent container
+    padding: 20px; // Padding around the grid
 }

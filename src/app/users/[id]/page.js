@@ -3,7 +3,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import FetchApi from "@/components/useFetch";
 import CircumIcon from "@klarr-agency/circum-icons-react";
+import { getCookie } from "cookies-next";
+import Link from "next/link";
 
 import "./styles.scss";
 
@@ -11,25 +14,17 @@ export default function Page() {
     const router = useRouter();
     const { id } = useParams();
     const [user, setUser] = useState(null);
+    const [orders, setOrders] = useState([]);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    //https://backend-api-dev-rob6.onrender.com
     useEffect(() => {
-        fetch(`http://localhost:3001/api/users/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success === false) {
-                    setError(data.message);
-                    setIsLoading(false);
-                    return;
-                }
-                setUser(data.results);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                setError("Error fetching user");
-                setIsLoading(false);
-            });
+        FetchApi({ url: `/api/users/${id}`, method: "GET" }).then((data) => {
+            setUser(data.results);
+        });
+        FetchApi({ url: `/api/orders/user/${id}`, method: "GET" }).then(
+            (data) => {
+                setOrders(data.results);
+            }
+        );
     }, [id]);
 
     return (
@@ -45,11 +40,7 @@ export default function Page() {
                     <h3 className="user__error">{error}</h3>
                 </div>
             )}
-            {isLoading && (
-                <div className="user__container__content">
-                    <h3 className="user__loading">Loading...</h3>
-                </div>
-            )}
+
             {user && (
                 <div className="user__container__content">
                     <div className="user__image-container">
@@ -95,6 +86,29 @@ export default function Page() {
                             <span>{user?.city}</span>
                         </div>
                     </div>
+                </div>
+            )}
+            {orders.length > 0 ? (
+                <div className="user__order__content">
+                    <h1 className="user__title">Orders</h1>
+                    {orders.map((order) => (
+                        <Link
+                            key={order.id}
+                            className="user__order__content__orders"
+                            href={`/orders/${order.id}`}
+                        >
+                            <div>
+                                <h1>Order ID: {order.id}</h1>
+                                <h1>Order Date: {order.order_date}</h1>
+                                <h1>Status: {order.status}</h1>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <div className="user__order__content">
+                    <h1 className="user__title">Orders</h1>
+                    <h1>No orders</h1>
                 </div>
             )}
         </div>
