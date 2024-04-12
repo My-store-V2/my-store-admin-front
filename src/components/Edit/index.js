@@ -1,9 +1,9 @@
 import Modal from "@/components/UI/Modal";
 import Loading from "@/components/UI/Loading";
 import Button from "@/components/UI/Button";
-
 import { useEffect, useState } from "react";
 import FetchApi from "../useFetch";
+import { toast } from 'react-hot-toast';
 
 const Index = ({
     setIsOpen,
@@ -71,11 +71,14 @@ const Index = ({
                                 ? response.results
                                 : data
                         )
+                        
                     );
                     setIsOpen(false);
+                    toast.success('Vos modifications ont été envoyées avec succès !');
                 })
                 .catch((error) => {
                     console.log("error : ", error);
+                    toast.error("Une erreur s'est produite. Veuillez réessayer.");
                 });
         } else {
             // run add request
@@ -87,6 +90,7 @@ const Index = ({
                 .then((response) => {
                     setDataList([...dataList, response.results]);
                     setIsOpen(false);
+                    toast.success('Votre creation a été envoyée avec succès !');
                 })
                 .catch((error) => {
                     console.log("error : ", error);
