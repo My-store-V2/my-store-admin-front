@@ -3,7 +3,7 @@ import styles from "@/app/page.module.scss";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
 import FetchApi from "@/components/useFetch";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setCookie } from "cookies-next";
 import "./styles.scss";
@@ -31,9 +31,7 @@ export default function Page() {
       .then(({ token, success }) => {
         if (success) {
           setCookie("token", `Bearer ${token}`);
-
           router.push("/");
-          window.location.reload();
         } else {
           console.log("success : ", success);
         }
