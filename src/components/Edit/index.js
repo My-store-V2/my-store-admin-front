@@ -130,7 +130,6 @@ const Index = ({
             if (product) {
                 setLoading(true);
                 try {
-                    console.log("dataForm : ", dataForm);
                     const formData = new FormData();
                     for (const key in dataForm) {
                         if (key === "thumbnail" || key === "packshot") {
@@ -205,11 +204,7 @@ const Index = ({
             >
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {/* form data initiated in props */}
-                <Form
-                    dataForm={dataForm}
-                    handleChange={handleChange}
-                    deleteElement={deleteElement}
-                />
+                <Form dataForm={dataForm} handleChange={handleChange} />
                 {(edit && (
                     <Button
                         type="submit"

@@ -1,10 +1,9 @@
 import React from "react";
 import Input from "../Input";
-import Button from "../Button";
 
 import "./productFormStyles.scss";
 
-const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
+const Index = ({ dataForm: ProductForm, handleChange }) => {
     return (
         <div className="form__group">
             <div className="form__product__group">
@@ -105,7 +104,7 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                     name="active"
                     checked={!ProductForm?.active}
                     placeholder="Product Disable"
-                    onChange={(e) =>
+                    onChange={() =>
                         handleChange({
                             target: {
                                 name: "active",
