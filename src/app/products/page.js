@@ -7,7 +7,6 @@ import Edit from "@/components/Edit";
 import Button from "@/components/UI/Button";
 import CardProduct from "@/components/UI/card/product_card";
 import FormUser from "@/components/UI/form/product_form";
-import { Toaster } from 'react-hot-toast';
 
 export default function Products() {
     const title = "products";
@@ -61,8 +60,7 @@ export default function Products() {
                     dataList={dataList}
                 />
             )}
-            <Toaster />
-            
+
             <div className={styles.listContainer}>
                 <h1 className={styles.listTitle}>{title}</h1>
                 {dataList.map((data) => (
