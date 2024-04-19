@@ -19,7 +19,7 @@ const Index = () => {
     };
 
     const isActiveLink = (href) => {
-        return pathname === href;
+        return pathname.includes(href);
     };
 
     return (
