@@ -18,8 +18,9 @@ export async function middleware(request) {
                 },
             }
         );
-
         if (session.status !== 200) {
+            // logout
+            deleteCookie("token", { req: request });
             return NextResponse.redirect(
                 new URL("/login", request.url).toString()
             );
@@ -38,13 +39,13 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    "/products/:path*",
-    "/users/:path*",
-    "/products",
-    "/users",
-    "/",
-    "/orders/:path*",
-    "/orders",
-  ],
+    matcher: [
+        "/products/:path*",
+        "/users/:path*",
+        "/products",
+        "/users",
+        "/",
+        "/orders/:path*",
+        "/orders",
+    ],
 };
