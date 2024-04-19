@@ -1,10 +1,9 @@
 import React from "react";
 import Input from "../Input";
-import Button from "../Button";
 
 import "./productFormStyles.scss";
 
-const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
+const Index = ({ dataForm: ProductForm, handleChange }) => {
     return (
         <div className="form__group">
             <div className="form__product__group">
@@ -43,21 +42,20 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
             </div>
             <div className="form__product__group__image">
                 <div className="form__product__group__image__thumbnail">
-                    {ProductForm?.thumbnail &&
-                        typeof ProductForm?.thumbnail === "object" && (
-                            <img
-                                alt="not found"
-                                width={"250px"}
-                                className="thumbnail__image"
-                                src={
-                                    typeof ProductForm?.thumbnail === "string"
-                                        ? ProductForm?.thumbnail
-                                        : URL.createObjectURL(
-                                              ProductForm?.thumbnail
-                                          )
-                                }
-                            />
-                        )}
+                    {ProductForm?.thumbnail && (
+                        <img
+                            alt="not found"
+                            width={"250px"}
+                            className="thumbnail__image"
+                            src={
+                                typeof ProductForm?.thumbnail === "object"
+                                    ? URL.createObjectURL(
+                                          ProductForm?.thumbnail
+                                      )
+                                    : ProductForm?.thumbnail
+                            }
+                        />
+                    )}
                     {/* <Button
                             onClick={() => deleteElement("thumbnail")}
                             className="btn__remove"
@@ -67,7 +65,6 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                         label="miniature (image)"
                         type="file"
                         name="thumbnail"
-                        required={ProductForm?.thumbnail ? false : true}
                         onChange={(e) => handleChange(e, "thumbnail")}
                     />
                 </div>
@@ -79,9 +76,9 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                             width={"250px"}
                             className="packshot__image"
                             src={
-                                typeof ProductForm?.packshot === "string"
-                                    ? ProductForm?.packshot
-                                    : URL.createObjectURL(ProductForm?.packshot)
+                                typeof ProductForm?.packshot === "object"
+                                    ? URL.createObjectURL(ProductForm?.packshot)
+                                    : ProductForm?.packshot
                             }
                         />
                     )}
@@ -94,7 +91,6 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                         label="packshot (image)"
                         type="file"
                         name="packshot"
-                        required={ProductForm?.packshot ? false : true}
                         placeholder="Article packshot"
                         onChange={(e) => handleChange(e, "packshot")}
                     />
@@ -108,7 +104,7 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                     name="active"
                     checked={!ProductForm?.active}
                     placeholder="Product Disable"
-                    onChange={(e) =>
+                    onChange={() =>
                         handleChange({
                             target: {
                                 name: "active",
