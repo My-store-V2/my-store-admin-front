@@ -7,6 +7,7 @@ import Edit from "@/components/Edit";
 import Button from "@/components/UI/Button";
 import CardUser from "@/components/UI/card/user_card";
 import FormUser from "@/components/UI/form/user_form";
+import { Toaster } from 'react-hot-toast';
 
 export default function Users() {
     const title = "users";
@@ -60,6 +61,7 @@ export default function Users() {
                     dataList={dataList}
                 />
             )}
+            <Toaster />
 
             <div className={styles.listContainer}>
                 <h1 className={styles.listTitle}>{title}</h1>
