@@ -38,6 +38,7 @@ export default function Users() {
     fetchData();
   }, [db_name]);
 
+
   const deleteData = async (id) => {
     try {
       await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
