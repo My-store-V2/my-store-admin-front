@@ -5,21 +5,53 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import FetchApi from "@/components/useFetch";
 import CircumIcon from "@klarr-agency/circum-icons-react";
-import { getCookie } from "cookies-next";
 import Link from "next/link";
-
+import {Toaster, toast} from 'react-hot-toast';
+import Button from '@/components/UI/Button';
+import Edit from  '@/components/Edit';
+import FormUser from "@/components/UI/form/user_form";
 import "./styles.scss";
 
 export default function Page() {
+
+    const db_name = "users";
+
+    const [dataList, setDataList] = useState([]);
+    const [openForm, setOpenForm] = useState(false);
+    const [selectedData, setSelectedData] = useState(null);
+    const [isEdit, setIsEdit] = useState(false);
+
     const router = useRouter();
     const { id } = useParams();
     const [user, setUser] = useState(null);
     const [orders, setOrders] = useState([]);
     const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { results, success } = await FetchApi({
+                    url: `/api/${db_name}`,
+                    method: "GET",
+                });
+                if (success) {
+                    setDataList(results);
+                } else {
+                    console.log("fetching data failed");
+                }
+            } catch (error) {
+                console.error("Fetching error: ", error);
+            }
+        };
+
+        fetchData();
+    }, [db_name]);
+
     useEffect(() => {
         FetchApi({ url: `/api/users/${id}`, method: "GET" }).then((data) => {
             setUser(data.results);
         });
+
         FetchApi({ url: `/api/orders/user/${id}`, method: "GET" }).then(
             (data) => {
                 setOrders(data.results);
@@ -27,7 +59,40 @@ export default function Page() {
         );
     }, [id]);
 
+    const deleteData = async (id) => {
+        const confirmDelete = window.confirm(
+            "Êtes-vous sûr de vouloir supprimer cet élément ?"
+        );
+        if (confirmDelete) {    
+            try {
+                await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
+                setDataList(dataList.filter((item) => item.id !== id));
+                console.log(`User with ID ${id} deleted successfully`);
+                router.push('/users');
+                toast.success(`User deleted successfully`);
+            } catch (error) {
+                console.error("Deletion error: ", error);
+                console.log(`Failed to delete user with ID ${id}`);
+                toast.error(`Failed to delete user with ID ${id}`);
+            }
+        }
+    };
+
     return (
+        <>
+                <Toaster />
+        {openForm && (
+            <Edit
+                setIsOpen={setOpenForm}
+                data={selectedData}
+                edit={isEdit}
+                FormData={FormUser}
+                db_name={db_name}
+                setDataList={setDataList}
+                dataList={dataList}
+            />
+        )}
+
         <div className="user__container">
             <div
                 className="user__container__header"
@@ -86,7 +151,21 @@ export default function Page() {
                             <span>{user?.city}</span>
                         </div>
                     </div>
+                    <Button
+                        className="red"
+                        clickHandler={() => deleteData(user.id)}
+                        title="delete"
+                    />
+                    <Button
+                        clickHandler={() => {
+                            setSelectedData(user);
+                            setOpenForm(true);
+                            setIsEdit(true);
+                        }}
+                        title="edit"
+                    />
                 </div>
+                
             )}
             {orders.length > 0 ? (
                 <div className="user__order__content">
@@ -112,5 +191,6 @@ export default function Page() {
                 </div>
             )}
         </div>
+        </>
     );
 }
