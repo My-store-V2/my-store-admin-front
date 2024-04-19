@@ -26,7 +26,6 @@ export default function Users() {
           url: `/api/${db_name}`,
           method: "GET",
         });
-        console.log("result : ", results);
         if (success) {
           setDataList(results);
         } else {
@@ -39,6 +38,7 @@ export default function Users() {
 
     fetchData();
   }, [db_name]);
+
 
   const deleteData = async (id) => {
     const confirmDelete = window.confirm(
