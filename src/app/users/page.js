@@ -59,14 +59,16 @@ export default function Users() {
         <Edit
           setIsOpen={setOpenForm}
           data={selectedData}
-          edit={isEdit}
+          product={isEdit}
           FormData={FormUser}
           db_name={db_name}
           setDataList={setDataList}
           dataList={dataList}
         />
       )}
+
       <Toaster />
+
       <div className={styles.listContainer}>
         <h1 className={styles.listTitle}>{title}</h1>
         {dataList.map((data) => (
