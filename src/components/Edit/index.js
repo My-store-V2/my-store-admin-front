@@ -1,5 +1,5 @@
 import Modal from "@/components/UI/Modal";
-import Loading from "@/components/UI/Loading";
+
 import Button from "@/components/UI/Button";
 import { getCookie } from "cookies-next";
 
@@ -18,6 +18,7 @@ const Index = ({
     const [dataForm, setDataForm] = useState();
     const [edit, setEdit] = useState(false);
     const [error, setError] = useState(null);
+    const [Loading, setLoading] = useState(false);
 
     // handle change input
     const handleChange = (e) => {
@@ -47,30 +48,87 @@ const Index = ({
     const submitForm = async (e) => {
         e.preventDefault();
         setError(null);
+        setLoading(true);
         if (edit) {
-            // run edit request
-            const result = FetchApi({
-                url: `/api/${db_name}/${dataForm.id}`,
-                method: edit ? "PUT" : "POST",
-                body: product ? formData : JSON.stringify(dataForm),
-                headers: product ? {} : { "Content-Type": "application/json" },
-            })
-                .then((response) => {
+            if (product) {
+                setLoading(true);
+                try {
+                    const formData = new FormData();
+                    for (const key in dataForm) {
+                        if (key === "thumbnail" || key === "packshot") {
+                            formData.append(key, dataForm[key]);
+                        } else {
+                            formData.append(key, dataForm[key]);
+                        }
+                    }
+
+                    const response = await fetch(
+                        `${process.env.NEXT_PUBLIC_API_URL}/api/${db_name}/${dataForm.id}`,
+                        {
+                            method: "PUT",
+                            body: formData,
+                            headers: {
+                                Authorization: `${getCookie("token")}`,
+                            },
+                        }
+                    );
+
+                    if (!response.ok) {
+                        // Vérifie le succès de la réponse de façon plus robuste
+                        const errorData = await response.json(); // Tentative de récupération du message d'erreur du serveur
+                        throw new Error(
+                            errorData.message || "Error submitting form"
+                        );
+                    }
+
+                    const dataJson = await response.json(); // Parse la réponse en JSON si la réponse est un succès
+
                     setDataList(
                         dataList.map((data) =>
-                            data.id == response.results.id
-                                ? response.results
+                            data.id == dataJson.results.id
+                                ? dataJson.results
                                 : data
                         )
                     );
+
                     setIsOpen(false);
-                })
-                .catch((error) => {
-                    console.log("error : ", error);
+                } catch (error) {
+                    console.error("Failed to submit form: ", error.message); // Affichage plus clair des erreurs dans la console
                     setError(error.message);
-                });
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                // run edit request
+                const result = FetchApi({
+                    url: `/api/${db_name}/${dataForm.id}`,
+                    method: edit ? "PUT" : "POST",
+                    body: dataForm,
+                    headers: product
+                        ? {}
+                        : { "Content-Type": "application/json" },
+                })
+                    .then((response) => {
+                        setDataList(
+                            dataList.map((data) =>
+                                data.id == response.results.id
+                                    ? response.results
+                                    : data
+                            )
+                        );
+                        setIsOpen(false);
+                    })
+                    .catch((error) => {
+                        console.log("error : ", error);
+                        setError(error.message);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            }
         } else {
             if (product) {
+                setLoading(true);
                 try {
                     console.log("dataForm : ", dataForm);
                     const formData = new FormData();
@@ -84,9 +142,6 @@ const Index = ({
                         }
                     }
 
-                    for (const [key, value] of formData) {
-                        console.log(`${key}: ${value}\n`);
-                    }
                     const response = await fetch(
                         `${process.env.NEXT_PUBLIC_API_URL}/api/${db_name}`,
                         {
@@ -107,10 +162,13 @@ const Index = ({
                     }
 
                     const dataJson = await response.json(); // Parse la réponse en JSON si la réponse est un succès
-                    console.log("response : ", dataJson);
+                    setDataList([...dataList, dataJson.results]);
+                    setIsOpen(false);
                 } catch (error) {
                     console.error("Failed to submit form: ", error.message); // Affichage plus clair des erreurs dans la console
                     setError(error.message);
+                } finally {
+                    setLoading(false);
                 }
             } else {
                 // run add request
@@ -126,6 +184,9 @@ const Index = ({
                     .catch((error) => {
                         console.log("error : ", error);
                         setError(error.message);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
             }
         }
@@ -142,7 +203,7 @@ const Index = ({
                     submitForm(e);
                 }}
             >
-                {error && <p className="error">{error}</p>}
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 {/* form data initiated in props */}
                 <Form
                     dataForm={dataForm}
@@ -153,13 +214,13 @@ const Index = ({
                     <Button
                         type="submit"
                         className="btn__primary"
-                        title="Modify"
+                        title={Loading ? "Modification en cours ..." : "Modify"}
                     />
                 )) || (
                     <Button
                         type="submit"
                         className="btn__primary"
-                        title="Add"
+                        title={Loading ? "Ajout en cours ..." : "Add"}
                     />
                 )}
             </form>
