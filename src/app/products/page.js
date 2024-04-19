@@ -11,7 +11,7 @@ import FormUser from "@/components/UI/form/product_form";
 export default function Products() {
     const title = "products";
     const db_name = "products";
-    const add = false;
+    const add = true;
 
     const [dataList, setDataList] = useState([]);
     const [openForm, setOpenForm] = useState(false);
@@ -54,15 +54,26 @@ export default function Products() {
                     setIsOpen={setOpenForm}
                     data={selectedData}
                     edit={isEdit}
-                    FormData={FormUser}
+                    Form={FormUser}
                     db_name={db_name}
                     setDataList={setDataList}
                     dataList={dataList}
+                    product={true}
                 />
             )}
 
             <div className={styles.listContainer}>
                 <h1 className={styles.listTitle}>{title}</h1>
+                {add && (
+                    <Button
+                        clickHandler={() => {
+                            setSelectedData(null);
+                            setOpenForm(true);
+                            setIsEdit(false);
+                        }}
+                        title="add"
+                    />
+                )}
                 {dataList.map((data) => (
                     <div
                         key={data.id}
@@ -91,16 +102,6 @@ export default function Products() {
                         </div>
                     </div>
                 ))}
-                {add && (
-                    <Button
-                        clickHandler={() => {
-                            setSelectedData(null);
-                            setOpenForm(true);
-                            setIsEdit(false);
-                        }}
-                        title="add"
-                    />
-                )}
             </div>
         </>
     );

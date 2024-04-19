@@ -42,50 +42,63 @@ const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
                 />
             </div>
             <div className="form__product__group__image">
-                {ProductForm?.thumbnail && (
-                    <div className="form__product__group__image__thumbnail">
-                        <img
-                            alt="not found"
-                            width={"250px"}
-                            src={ProductForm?.thumbnail}
-                        />
-                        {/* <Button
+                <div className="form__product__group__image__thumbnail">
+                    {ProductForm?.thumbnail &&
+                        typeof ProductForm?.thumbnail === "object" && (
+                            <img
+                                alt="not found"
+                                width={"250px"}
+                                className="thumbnail__image"
+                                src={
+                                    typeof ProductForm?.thumbnail === "string"
+                                        ? ProductForm?.thumbnail
+                                        : URL.createObjectURL(
+                                              ProductForm?.thumbnail
+                                          )
+                                }
+                            />
+                        )}
+                    {/* <Button
                             onClick={() => deleteElement("thumbnail")}
                             className="btn__remove"
                             title="Delete the image"
                         /> */}
-                        <input
-                            label="miniature (image)"
-                            type="file"
-                            name="thumbnail"
-                            required={ProductForm?.thumbnail ? false : true}
-                            onChange={(e) => handleChange(e, "thumbnail")}
-                        />
-                    </div>
-                )}
+                    <input
+                        label="miniature (image)"
+                        type="file"
+                        name="thumbnail"
+                        required={ProductForm?.thumbnail ? false : true}
+                        onChange={(e) => handleChange(e, "thumbnail")}
+                    />
+                </div>
 
-                {ProductForm?.packshot && (
-                    <div className="form__product__group__image__packshot">
+                <div className="form__product__group__image__packshot">
+                    {ProductForm?.packshot && (
                         <img
                             alt="not found"
                             width={"250px"}
-                            src={ProductForm?.packshot}
+                            className="packshot__image"
+                            src={
+                                typeof ProductForm?.packshot === "string"
+                                    ? ProductForm?.packshot
+                                    : URL.createObjectURL(ProductForm?.packshot)
+                            }
                         />
-                        {/* <Button
+                    )}
+                    {/* <Button
                             onClick={() => deleteElement("packshot")}
                             className="btn__remove"
                             title="Delete the image"
                         /> */}
-                        <input
-                            label="packshot (image)"
-                            type="file"
-                            name="packshot"
-                            required={ProductForm?.packshot ? false : true}
-                            placeholder="Article packshot"
-                            onChange={(e) => handleChange(e, "packshot")}
-                        />
-                    </div>
-                )}
+                    <input
+                        label="packshot (image)"
+                        type="file"
+                        name="packshot"
+                        required={ProductForm?.packshot ? false : true}
+                        placeholder="Article packshot"
+                        onChange={(e) => handleChange(e, "packshot")}
+                    />
+                </div>
             </div>
             <div className="form__product__group__disable">
                 <label htmlFor="active">disable</label>

@@ -54,7 +54,7 @@ export default function Users() {
                     setIsOpen={setOpenForm}
                     data={selectedData}
                     edit={isEdit}
-                    FormData={FormUser}
+                    Form={FormUser}
                     db_name={db_name}
                     setDataList={setDataList}
                     dataList={dataList}
