@@ -11,7 +11,7 @@ import FormUser from "@/components/UI/form/product_form";
 export default function Products() {
   const title = "products";
   const db_name = "products";
-  const add = false;
+  const add = true;
 
   const [dataList, setDataList] = useState([]);
   const [openForm, setOpenForm] = useState(false);
@@ -34,7 +34,6 @@ export default function Products() {
         console.error("Fetching error: ", error);
       }
     };
-
     fetchData();
   }, [db_name]);
 
