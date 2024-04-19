@@ -8,15 +8,12 @@ const FetchApi = async ({ url, method, body }) => {
         }, 100000);
     });
     try {
-        const token = getCookie("token");
         const responsePromise = fetch(
             `${process.env.NEXT_PUBLIC_API_URL}${url}`,
             {
                 headers: {
                     "Content-Type": "Application/json",
-                    ...(token && {
-                        authorization: token,
-                    }),
+                    authorization: getCookie("token"),
                 },
                 method: method,
                 ...(body && {
