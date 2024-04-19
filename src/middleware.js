@@ -34,16 +34,17 @@ export async function middleware(request) {
         // Rediriger vers la page de connexion en cas d'erreur
         return NextResponse.redirect(new URL("/login", request.url).toString());
     }
+
 }
 
 export const config = {
-    matcher: [
-        "/products/:path*",
-        "/users/:path*",
-        "/products",
-        "/users",
-        "/",
-        "/orders/:path*",
-        "/orders",
-    ],
+  matcher: [
+    "/products/:path*",
+    "/users/:path*",
+    "/products",
+    "/users",
+    "/",
+    "/orders/:path*",
+    "/orders",
+  ],
 };
