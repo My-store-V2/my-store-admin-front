@@ -7,7 +7,7 @@ import Edit from "@/components/Edit";
 import Button from "@/components/UI/Button";
 import CardProduct from "@/components/UI/card/product_card";
 import FormUser from "@/components/UI/form/product_form";
-
+import { Toaster, toast } from "react-hot-toast";
 export default function Products() {
     const title = "products";
     const db_name = "products";
@@ -45,6 +45,26 @@ export default function Products() {
             console.error("Deletion error: ", error);
         }
     };
+    fetchData();
+  }, [db_name]);
+
+  const deleteData = async (id) => {
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cet élément ?"
+    );
+    if (confirmDelete) {
+      try {
+        await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
+        setDataList(dataList.filter((item) => item.id !== id));
+        console.log(`Product with ID ${id} deleted successfully`);
+        toast.success(`Product deleted successfully`);
+      } catch (error) {
+        console.error("Deletion error: ", error);
+        console.log(`Failed to delete product with ID ${id}`);
+        toast.error(`Failed to delete product with ID ${id}`);
+      }
+    }
+  };
 
     return (
         <>
@@ -60,7 +80,6 @@ export default function Products() {
                     product={true}
                 />
             )}
-
             <div className={styles.listContainer}>
                 <h1 className={styles.listTitle}>{title}</h1>
                 {dataList.map((data) => (
@@ -101,6 +120,34 @@ export default function Products() {
                         title="add"
                     />
                 )}
+      <Toaster />
+
+      <div className={styles.listContainer}>
+        <h1 className={styles.listTitle}>{title}</h1>
+        {dataList.map((data) => (
+          <div
+            key={data.id}
+            className={`${styles.list} ${
+              title === "product" ? styles.small : ""
+            }`}>
+            <CardProduct data={data} />
+            <div className={styles.flexrow}>
+              <Button
+                className="red"
+                clickHandler={() => deleteData(data.id)}
+                title="delete"
+              />
+              <Button
+                clickHandler={() => {
+                  setSelectedData(data);
+                  setOpenForm(true);
+                  setIsEdit(true);
+                }}
+                title="edit"
+              />
+              <Link href={`/${db_name}/${data.id}`}>
+                <Button title="view" />
+              </Link>
             </div>
         </>
     );
