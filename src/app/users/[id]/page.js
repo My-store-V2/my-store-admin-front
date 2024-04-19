@@ -14,7 +14,7 @@ import "./styles.scss";
 
 export default function Page() {
   const db_name = "users";
-
+  //A
   const [dataList, setDataList] = useState([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
@@ -162,7 +162,7 @@ export default function Page() {
             </div>
           </div>
         )}
-        {orders.length > 0 ? (
+        {orders.length >= 1 ? (
           <div className="user__order__content">
             <h1 className="user__title">Orders</h1>
             {orders.map((order) => (
