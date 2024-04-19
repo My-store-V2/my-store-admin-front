@@ -4,12 +4,7 @@ import Button from "../Button";
 
 import "./productFormStyles.scss";
 
-const Index = ({
-    dataForm: ProductForm,
-    handleChange,
-    handleImage,
-    deleteElement,
-}) => {
+const Index = ({ dataForm: ProductForm, handleChange, deleteElement }) => {
     return (
         <div className="form__group">
             <div className="form__product__group">
@@ -54,16 +49,17 @@ const Index = ({
                             width={"250px"}
                             src={ProductForm?.thumbnail}
                         />
-                        <Button
+                        {/* <Button
                             onClick={() => deleteElement("thumbnail")}
                             className="btn__remove"
                             title="Delete the image"
-                        />
+                        /> */}
                         <input
                             label="miniature (image)"
                             type="file"
+                            name="thumbnail"
                             required={ProductForm?.thumbnail ? false : true}
-                            onChange={(e) => handleImage(e)}
+                            onChange={(e) => handleChange(e, "thumbnail")}
                         />
                     </div>
                 )}
@@ -75,18 +71,18 @@ const Index = ({
                             width={"250px"}
                             src={ProductForm?.packshot}
                         />
-                        <Button
+                        {/* <Button
                             onClick={() => deleteElement("packshot")}
                             className="btn__remove"
                             title="Delete the image"
-                        />
+                        /> */}
                         <input
                             label="packshot (image)"
                             type="file"
                             name="packshot"
                             required={ProductForm?.packshot ? false : true}
                             placeholder="Article packshot"
-                            onChange={(e) => handleImage(e)}
+                            onChange={(e) => handleChange(e, "packshot")}
                         />
                     </div>
                 )}
