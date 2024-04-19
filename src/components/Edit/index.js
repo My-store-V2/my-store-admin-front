@@ -12,34 +12,26 @@ const Index = ({
     db_name,
     dataList,
     setDataList,
+    product,
 }) => {
     const [dataForm, setDataForm] = useState();
     const [edit, setEdit] = useState(false);
 
+    console.log("dataForm : ", dataForm);
+
     // handle change input
     const handleChange = (e) => {
-        setDataForm({ ...dataForm, [e.target.name]: e.target.value });
-    };
+        const { name, type, value, files } = e.target;
+        console.log("Input name: ", name);
+        console.log("Input type: ", type);
 
-    // handle image input
-    const handleImage = async (e) => {
-        if (e?.target?.files[0] == undefined || e?.target?.files[0] == null)
-            return console.log("no image");
-
-        // preview image
-        const preview_url = URL.createObjectURL(e.target.files[0]);
-        // convert image to base64 and set it to dataForm state
-        const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onload = async () => {
-            const base64 = reader.result;
-            setDataForm({
-                ...dataForm,
-                [e.target.name + "_name"]: e.target.files[0].name,
-                [e.target.name + "_base64"]: base64,
-                [e.target.name]: preview_url,
-            });
-        };
+        if (type === "file") {
+            const file = files[0];
+            console.log("Uploaded file: ", file.name);
+            setDataForm({ ...dataForm, [name]: file });
+        } else {
+            setDataForm({ ...dataForm, [name]: value });
+        }
     };
 
     // delete element (image, file, video, etc...)
@@ -61,8 +53,9 @@ const Index = ({
             // run edit request
             const result = FetchApi({
                 url: `/api/${db_name}/${dataForm.id}`,
-                method: "PUT",
-                body: dataForm,
+                method: edit ? "PUT" : "POST",
+                body: product ? formData : JSON.stringify(dataForm),
+                headers: product ? {} : { "Content-Type": "application/json" },
             })
                 .then((response) => {
                     setDataList(
@@ -109,7 +102,6 @@ const Index = ({
                 <FormData
                     dataForm={dataForm}
                     handleChange={handleChange}
-                    handleImage={handleImage}
                     deleteElement={deleteElement}
                 />
                 {(edit && (
