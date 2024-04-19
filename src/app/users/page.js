@@ -10,105 +10,110 @@ import FormUser from "@/components/UI/form/user_form";
 import { Toaster } from "react-hot-toast";
 
 export default function Users() {
-  const title = "users";
-  const db_name = "users";
-  const add = false;
+    const title = "users";
+    const db_name = "users";
+    const add = false;
 
-  const [dataList, setDataList] = useState([]);
-  const [openForm, setOpenForm] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
-  const [isEdit, setIsEdit] = useState(false);
+    const [dataList, setDataList] = useState([]);
+    const [openForm, setOpenForm] = useState(false);
+    const [selectedData, setSelectedData] = useState(null);
+    const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { results, success } = await FetchApi({
-          url: `/api/${db_name}`,
-          method: "GET",
-        });
-        if (success) {
-          setDataList(results);
-        } else {
-          console.log("fetching data failed");
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { results, success } = await FetchApi({
+                    url: `/api/${db_name}`,
+                    method: "GET",
+                });
+                if (success) {
+                    setDataList(results);
+                } else {
+                    console.log("fetching data failed");
+                }
+            } catch (error) {
+                console.error("Fetching error: ", error);
+            }
+        };
+
+        fetchData();
+    }, [db_name]);
+
+    const deleteData = async (id) => {
+        const confirmDelete = window.confirm(
+            "Êtes-vous sûr de vouloir supprimer cet élément ?"
+        );
+        if (confirmDelete) {
+            try {
+                await FetchApi({
+                    url: `/api/${db_name}/${id}`,
+                    method: "DELETE",
+                });
+                setDataList(dataList.filter((item) => item.id !== id));
+            } catch (error) {
+                console.error("Deletion error: ", error);
+            }
         }
-      } catch (error) {
-        console.error("Fetching error: ", error);
-      }
     };
 
-    fetchData();
-  }, [db_name]);
+    return (
+        <>
+            {openForm && (
+                <Edit
+                    setIsOpen={setOpenForm}
+                    data={selectedData}
+                    edit={isEdit}
+                    Form={FormUser}
+                    db_name={db_name}
+                    setDataList={setDataList}
+                    dataList={dataList}
+                    product={false}
+                />
+            )}
 
-  const deleteData = async (id) => {
-    const confirmDelete = window.confirm(
-      "Êtes-vous sûr de vouloir supprimer cet élément ?"
-    );
-    if (confirmDelete) {
-      try {
-        await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
-        setDataList(dataList.filter((item) => item.id !== id));
-      } catch (error) {
-        console.error("Deletion error: ", error);
-      }
-    }
-  };
+            <Toaster />
 
-  return (
-    <>
-      {openForm && (
-        <Edit
-          setIsOpen={setOpenForm}
-          data={selectedData}
-          product={isEdit}
-          FormData={FormUser}
-          db_name={db_name}
-          setDataList={setDataList}
-          dataList={dataList}
-        />
-      )}
-
-      <Toaster />
-
-      <div className={styles.listContainer}>
-        <h1 className={styles.listTitle}>{title}</h1>
-        {dataList.map((data) => (
-          <div
-            key={data.id}
-            className={`${styles.list} ${
-              title === "product" ? styles.small : ""
-            }`}>
-            <CardUser data={data} />
-            <div className={styles.flexrow}>
-              <Button
-                className="red"
-                clickHandler={() => deleteData(data.id)}
-                title="delete"
-              />
-              <Button
-                clickHandler={() => {
-                  setSelectedData(data);
-                  setOpenForm(true);
-                  setIsEdit(true);
-                }}
-                title="edit"
-              />
-              <Link href={`/${db_name}/${data.id}`}>
-                <Button title="view" />
-              </Link>
+            <div className={styles.listContainer}>
+                <h1 className={styles.listTitle}>{title}</h1>
+                {dataList.map((data) => (
+                    <div
+                        key={data.id}
+                        className={`${styles.list} ${
+                            title === "product" ? styles.small : ""
+                        }`}
+                    >
+                        <CardUser data={data} />
+                        <div className={styles.flexrow}>
+                            <Button
+                                className="red"
+                                clickHandler={() => deleteData(data.id)}
+                                title="delete"
+                            />
+                            <Button
+                                clickHandler={() => {
+                                    setSelectedData(data);
+                                    setOpenForm(true);
+                                    setIsEdit(true);
+                                }}
+                                title="edit"
+                            />
+                            <Link href={`/${db_name}/${data.id}`}>
+                                <Button title="view" />
+                            </Link>
+                        </div>
+                    </div>
+                ))}
+                {add && (
+                    <Button
+                        clickHandler={() => {
+                            setSelectedData(null);
+                            setOpenForm(true);
+                            setIsEdit(false);
+                        }}
+                        title="add"
+                    />
+                )}
             </div>
-          </div>
-        ))}
-        {add && (
-          <Button
-            clickHandler={() => {
-              setSelectedData(null);
-              setOpenForm(true);
-              setIsEdit(false);
-            }}
-            title="add"
-          />
-        )}
-      </div>
-    </>
-  );
+        </>
+    );
 }

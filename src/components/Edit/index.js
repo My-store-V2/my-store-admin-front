@@ -1,54 +1,49 @@
 import Modal from "@/components/UI/Modal";
 
 import Button from "@/components/UI/Button";
+import { getCookie } from "cookies-next";
+import { Toaster, toast } from "react-hot-toast";
+
 import { useEffect, useState } from "react";
 import FetchApi from "../useFetch";
-import { toast } from "react-hot-toast";
 
 const Index = ({
-  setIsOpen,
-  data,
-  FormData,
-  db_name,
-  dataList,
-  setDataList,
+    setIsOpen,
+    data,
+    Form,
+    db_name,
+    dataList,
+    setDataList,
+    product,
 }) => {
     const [dataForm, setDataForm] = useState();
     const [edit, setEdit] = useState(false);
     const [error, setError] = useState(null);
     const [Loading, setLoading] = useState(false);
 
+    // handle change input
+    const handleChange = (e) => {
+        const { name, type, value, files } = e.target;
 
-  // handle change input
-  const handleChange = (e) => {
-    setDataForm({ ...dataForm, [e.target.name]: e.target.value });
-  };
-
-  // handle image input
-  const handleImage = async (e) => {
-    if (e?.target?.files[0] == undefined || e?.target?.files[0] == null)
-      return console.log("no image");
-
-    // preview image
-    const preview_url = URL.createObjectURL(e.target.files[0]);
-    // convert image to base64 and set it to dataForm state
-    const reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = async () => {
-      const base64 = reader.result;
-      setDataForm({
-        ...dataForm,
-        [e.target.name + "_name"]: e.target.files[0].name,
-        [e.target.name + "_base64"]: base64,
-        [e.target.name]: preview_url,
-      });
+        if (type === "file") {
+            const file = files[0];
+            setDataForm({ ...dataForm, [name]: file });
+        } else {
+            setDataForm({ ...dataForm, [name]: value });
+        }
     };
-  };
 
-  // delete element (image, file, video, etc...)
-  const deleteElement = async (name) => {
-    setDataForm({ ...dataForm, [name]: "" });
-  };
+    // delete element (image, file, video, etc...)
+    const deleteElement = async (name) => {
+        setDataForm({ ...dataForm, [name]: "" });
+    };
+
+    useEffect(() => {
+        if (data != undefined) {
+            setDataForm(data);
+            setEdit(true);
+        }
+    }, [data]);
 
     // submit form (edit or add data)
     const submitForm = async (e) => {
@@ -97,6 +92,8 @@ const Index = ({
                         )
                     );
 
+                    toast.success("Product modified successfully");
+
                     setIsOpen(false);
                 } catch (error) {
                     console.error("Failed to submit form: ", error.message); // Affichage plus clair des erreurs dans la console
@@ -123,6 +120,7 @@ const Index = ({
                             )
                         );
                         setIsOpen(false);
+                        toast.success("Product modified successfully");
                     })
                     .catch((error) => {
                         console.log("error : ", error);
@@ -158,33 +156,45 @@ const Index = ({
                         }
                     );
 
+                    if (!response.ok) {
+                        // Vérifie le succès de la réponse de façon plus robuste
+                        const errorData = await response.json(); // Tentative de récupération du message d'erreur du serveur
+                        throw new Error(
+                            errorData.message || "Error submitting form"
+                        );
+                    }
 
-          setIsOpen(false);
-          toast.success("Vos modifications ont été envoyées avec succès !");
-        })
-        .catch((error) => {
-          console.log("error : ", error);
-          toast.error("Une erreur s'est produite. Veuillez réessayer.");
-        });
-    } else {
-      FetchApi({
-        url: `/api/${db_name}`,
-        method: "POST",
-        body: dataForm,
-      })
-        .then((response) => {
-          setDataList([...dataList, response.results]);
-          setIsOpen(false);
-          toast.success("Votre creation a été envoyée avec succès !");
-        })
-
+                    const dataJson = await response.json(); // Parse la réponse en JSON si la réponse est un succès
+                    setDataList([...dataList, dataJson.results]);
+                    setIsOpen(false);
+                    toast.success("Product added successfully");
                 } catch (error) {
                     console.error("Failed to submit form: ", error.message); // Affichage plus clair des erreurs dans la console
                     setError(error.message);
                 } finally {
                     setLoading(false);
                 }
-            
+            } else {
+                // run add request
+                FetchApi({
+                    url: `/api/${db_name}`,
+                    method: "POST",
+                    body: dataForm,
+                })
+                    .then((response) => {
+                        setDataList([...dataList, response.results]);
+                        setIsOpen(false);
+                        toast.success("Product added successfully");
+                    })
+                    .catch((error) => {
+                        console.log("error : ", error);
+                        setError(error.message);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            }
+        }
     };
 
     // modal component
@@ -217,8 +227,6 @@ const Index = ({
             </form>
         </Modal>
     );
-
-
 };
 
 export default Index;
