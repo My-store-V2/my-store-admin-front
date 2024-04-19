@@ -7,7 +7,7 @@ import Edit from "@/components/Edit";
 import Button from "@/components/UI/Button";
 import CardProduct from "@/components/UI/card/product_card";
 import FormUser from "@/components/UI/form/product_form";
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Products() {
     const title = "products";
@@ -40,11 +40,21 @@ export default function Products() {
     }, [db_name]);
 
     const deleteData = async (id) => {
-        try {
-            await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
-            setDataList(dataList.filter((item) => item.id !== id));
-        } catch (error) {
-            console.error("Deletion error: ", error);
+        const confirmDelete = window.confirm(
+            "Êtes-vous sûr de vouloir supprimer cet élément ?"
+        );
+        if (confirmDelete) {
+            try {
+                await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
+                setDataList(dataList.filter((item) => item.id !== id));
+                console.log(`Product with ID ${id} deleted successfully`);
+                toast.success(`Product deleted successfully`);
+            } 
+            catch (error) {
+                console.error("Deletion error: ", error);
+                console.log(`Failed to delete product with ID ${id}`);
+                toast.error(`Failed to delete product with ID ${id}`);
+            }   
         }
     };
 
