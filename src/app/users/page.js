@@ -39,11 +39,16 @@ export default function Users() {
   }, [db_name]);
 
   const deleteData = async (id) => {
-    try {
-      await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
-      setDataList(dataList.filter((item) => item.id !== id));
-    } catch (error) {
-      console.error("Deletion error: ", error);
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cet élément ?"
+    );
+    if (confirmDelete) {
+      try {
+        await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
+        setDataList(dataList.filter((item) => item.id !== id));
+      } catch (error) {
+        console.error("Deletion error: ", error);
+      }
     }
   };
 
@@ -53,14 +58,13 @@ export default function Users() {
         <Edit
           setIsOpen={setOpenForm}
           data={selectedData}
-          edit={isEdit}
+          product={isEdit}
           FormData={FormUser}
           db_name={db_name}
           setDataList={setDataList}
           dataList={dataList}
         />
       )}
-
 
       <div className={styles.listContainer}>
         <h1 className={styles.listTitle}>{title}</h1>

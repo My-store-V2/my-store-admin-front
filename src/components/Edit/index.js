@@ -1,170 +1,120 @@
 import Modal from "@/components/UI/Modal";
 import Loading from "@/components/UI/Loading";
 import Button from "@/components/UI/Button";
-import { getCookie } from "cookies-next";
-
 import { useEffect, useState } from "react";
 import FetchApi from "../useFetch";
+import { toast } from "react-hot-toast";
 
 const Index = ({
-    setIsOpen,
-    data,
-    Form,
-    db_name,
-    dataList,
-    setDataList,
-    product,
+  setIsOpen,
+  data,
+  FormData,
+  db_name,
+  dataList,
+  setDataList,
 }) => {
-    const [dataForm, setDataForm] = useState();
-    const [edit, setEdit] = useState(false);
-    const [error, setError] = useState(null);
+  const [dataForm, setDataForm] = useState();
+  const [edit, setEdit] = useState(false);
 
-    // handle change input
-    const handleChange = (e) => {
-        const { name, type, value, files } = e.target;
+  // handle change input
+  const handleChange = (e) => {
+    setDataForm({ ...dataForm, [e.target.name]: e.target.value });
+  };
 
-        if (type === "file") {
-            const file = files[0];
-            setDataForm({ ...dataForm, [name]: file });
-        } else {
-            setDataForm({ ...dataForm, [name]: value });
-        }
+  // handle image input
+  const handleImage = async (e) => {
+    if (e?.target?.files[0] == undefined || e?.target?.files[0] == null)
+      return console.log("no image");
+
+    // preview image
+    const preview_url = URL.createObjectURL(e.target.files[0]);
+    // convert image to base64 and set it to dataForm state
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = async () => {
+      const base64 = reader.result;
+      setDataForm({
+        ...dataForm,
+        [e.target.name + "_name"]: e.target.files[0].name,
+        [e.target.name + "_base64"]: base64,
+        [e.target.name]: preview_url,
+      });
     };
+  };
 
-    // delete element (image, file, video, etc...)
-    const deleteElement = async (name) => {
-        setDataForm({ ...dataForm, [name]: "" });
-    };
+  // delete element (image, file, video, etc...)
+  const deleteElement = async (name) => {
+    setDataForm({ ...dataForm, [name]: "" });
+  };
 
-    useEffect(() => {
-        if (data != undefined) {
-            setDataForm(data);
-            setEdit(true);
-        }
-    }, [data]);
+  useEffect(() => {
+    if (data != undefined) {
+      setDataForm(data);
+      setEdit(true);
+    }
+  }, [data]);
 
-    // submit form (edit or add data)
-    const submitForm = async (e) => {
-        e.preventDefault();
-        setError(null);
-        if (edit) {
-            // run edit request
-            const result = FetchApi({
-                url: `/api/${db_name}/${dataForm.id}`,
-                method: edit ? "PUT" : "POST",
-                body: product ? formData : JSON.stringify(dataForm),
-                headers: product ? {} : { "Content-Type": "application/json" },
-            })
-                .then((response) => {
-                    setDataList(
-                        dataList.map((data) =>
-                            data.id == response.results.id
-                                ? response.results
-                                : data
-                        )
-                    );
-                    setIsOpen(false);
-                })
-                .catch((error) => {
-                    console.log("error : ", error);
-                    setError(error.message);
-                });
-        } else {
-            if (product) {
-                try {
-                    console.log("dataForm : ", dataForm);
-                    const formData = new FormData();
-                    for (const key in dataForm) {
-                        if (key === "thumbnail" || key === "packshot") {
-                            console.log("key : ", key);
-                            console.log("file : ", dataForm[key]);
-                            formData.append(key, dataForm[key]);
-                        } else {
-                            formData.append(key, dataForm[key]);
-                        }
-                    }
+  // submit form (edit or add data)
+  const submitForm = async (e) => {
+    e.preventDefault();
+    if (edit) {
+      const result = FetchApi({
+        url: `/api/${db_name}/${dataForm.id}`,
+        method: "PUT",
+        body: dataForm,
+      })
+        .then((response) => {
+          setDataList(
+            dataList.map((data) =>
+              data.id == response.results.id ? response.results : data
+            )
+          );
 
-                    for (const [key, value] of formData) {
-                        console.log(`${key}: ${value}\n`);
-                    }
-                    const response = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/api/${db_name}`,
-                        {
-                            method: "POST",
-                            body: formData,
-                            headers: {
-                                Authorization: `${getCookie("token")}`,
-                            },
-                        }
-                    );
+          setIsOpen(false);
+          toast.success("Vos modifications ont été envoyées avec succès !");
+        })
+        .catch((error) => {
+          console.log("error : ", error);
+          toast.error("Une erreur s'est produite. Veuillez réessayer.");
+        });
+    } else {
+      FetchApi({
+        url: `/api/${db_name}`,
+        method: "POST",
+        body: dataForm,
+      })
+        .then((response) => {
+          setDataList([...dataList, response.results]);
+          setIsOpen(false);
+          toast.success("Votre creation a été envoyée avec succès !");
+        })
 
-                    if (!response.ok) {
-                        // Vérifie le succès de la réponse de façon plus robuste
-                        const errorData = await response.json(); // Tentative de récupération du message d'erreur du serveur
-                        throw new Error(
-                            errorData.message || "Error submitting form"
-                        );
-                    }
+        .catch((error) => {
+          console.log("error : ", error);
+        });
+    }
+  };
 
-                    const dataJson = await response.json(); // Parse la réponse en JSON si la réponse est un succès
-                    console.log("response : ", dataJson);
-                } catch (error) {
-                    console.error("Failed to submit form: ", error.message); // Affichage plus clair des erreurs dans la console
-                    setError(error.message);
-                }
-            } else {
-                // run add request
-                FetchApi({
-                    url: `/api/${db_name}`,
-                    method: "POST",
-                    body: dataForm,
-                })
-                    .then((response) => {
-                        setDataList([...dataList, response.results]);
-                        setIsOpen(false);
-                    })
-                    .catch((error) => {
-                        console.log("error : ", error);
-                        setError(error.message);
-                    });
-            }
-        }
-    };
-
-    // modal component
-    return (
-        <Modal
-            title={edit ? "Modify" : "Add"}
-            closeModal={() => setIsOpen(false)}
-        >
-            <form
-                onSubmit={(e) => {
-                    submitForm(e);
-                }}
-            >
-                {error && <p className="error">{error}</p>}
-                {/* form data initiated in props */}
-                <Form
-                    dataForm={dataForm}
-                    handleChange={handleChange}
-                    deleteElement={deleteElement}
-                />
-                {(edit && (
-                    <Button
-                        type="submit"
-                        className="btn__primary"
-                        title="Modify"
-                    />
-                )) || (
-                    <Button
-                        type="submit"
-                        className="btn__primary"
-                        title="Add"
-                    />
-                )}
-            </form>
-        </Modal>
-    );
+  // modal component
+  return (
+    <Modal title={edit ? "Modify" : "Add"} closeModal={() => setIsOpen(false)}>
+      <form
+        onSubmit={(e) => {
+          submitForm(e);
+        }}>
+        {/* form data initiated in props */}
+        <FormData
+          dataForm={dataForm}
+          handleChange={handleChange}
+          handleImage={handleImage}
+          deleteElement={deleteElement}
+        />
+        {(edit && (
+          <Button type="submit" className="btn__primary" title="Modify" />
+        )) || <Button type="submit" className="btn__primary" title="Add" />}
+      </form>
+    </Modal>
+  );
 };
 
 export default Index;
