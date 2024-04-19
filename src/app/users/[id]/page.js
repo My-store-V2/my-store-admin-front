@@ -162,7 +162,7 @@ export default function Page() {
             </div>
           </div>
         )}
-        {orders.length > 0 ? (
+        {orders.length >= 1 ? (
           <div className="user__order__content">
             <h1 className="user__title">Orders</h1>
             {orders.map((order) => (
