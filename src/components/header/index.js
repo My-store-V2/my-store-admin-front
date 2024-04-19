@@ -7,76 +7,77 @@ import Button from "@/components/UI/Button";
 import "./styles.scss";
 
 const Index = ({ token }) => {
-  const router = useRouter();
+    const router = useRouter();
 
-  const pathname = usePathname();
+    const pathname = usePathname();
 
-  console.log("ok : ", token);
+    console.log("ok : ", token);
 
-  const handleLogout = () => {
-    deleteCookie("token");
-    router.push("/login");
-    window.location.reload();
-  };
+    const handleLogout = () => {
+        deleteCookie("token");
+        router.push("/login");
+        window.location.reload();
+    };
 
-  const isActiveLink = (href) => {
-    return pathname === href;
-  };
+    const isActiveLink = (href) => {
+        return pathname === href;
+    };
 
-  console.log(pathname);
-  if (token === undefined && isActiveLink("/")) {
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
-  }
-  return (
-    <header className="header">
-      <div className="header__logo">
-        <Link href="/">
-          <span className="header__logo__title">mystore.</span>
-        </Link>
-      </div>
-      {token ? (
-        <>
-          <div className="header__nav">
-            <Link href="/users">
-              <span
-                className={`header__nav__item ${
-                  isActiveLink("/users") ? "active" : ""
-                }`}>
-                Users
-              </span>
-            </Link>
-          </div>
-          <div className="header__nav">
-            <Link href="/products">
-              <span
-                className={`header__nav__item ${
-                  isActiveLink("/products") && "active"
-                }`}>
-                Products
-              </span>
-            </Link>
-          </div>
-          <div className="header__nav">
-            <Link href="/orders">
-              <span
-                className={`header__nav__item ${
-                  isActiveLink("/orders") && "active"
-                }`}>
-                Orders
-              </span>
-            </Link>
-          </div>
-          <div className="header__logout">
-            <Button title={"Logout"} clickHandler={handleLogout} />
-          </div>
-        </>
-      ) : (
-        <div></div>
-      )}
-    </header>
-  );
+    console.log(pathname);
+    if (token === undefined && isActiveLink("/")) {
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    }
+    return (
+        <header className="header">
+            <div className="header__logo">
+                <Link href="/">
+                    <span className="header__logo__title">mystore.</span>
+                </Link>
+            </div>
+            {token ? (
+                <div className="header__nav">
+                    <div className="header__nav__items">
+                        <Link href="/users">
+                            <span
+                                className={`header__nav__item ${
+                                    isActiveLink("/users") ? "active" : ""
+                                }`}
+                            >
+                                Users
+                            </span>
+                        </Link>
+
+                        <Link href="/products">
+                            <span
+                                className={`header__nav__item ${
+                                    isActiveLink("/products") && "active"
+                                }`}
+                            >
+                                Products
+                            </span>
+                        </Link>
+
+                        <Link href="/orders">
+                            <span
+                                className={`header__nav__item ${
+                                    isActiveLink("/orders") && "active"
+                                }`}
+                            >
+                                Orders
+                            </span>
+                        </Link>
+                    </div>
+                    <div className="header__logout">
+                        <Button title={"Logout"} clickHandler={handleLogout} />
+                    </div>
+                </div>
+            ) : (
+                <div></div>
+            )}
+        </header>
+    );
 };
 
 export default Index;
