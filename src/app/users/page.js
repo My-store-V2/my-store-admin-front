@@ -39,16 +39,11 @@ export default function Users() {
   }, [db_name]);
 
   const deleteData = async (id) => {
-    const confirmDelete = window.confirm(
-      "Êtes-vous sûr de vouloir supprimer cet élément ?"
-    );
-    if (confirmDelete) {
-      try {
-        await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
-        setDataList(dataList.filter((item) => item.id !== id));
-      } catch (error) {
-        console.error("Deletion error: ", error);
-      }
+    try {
+      await FetchApi({ url: `/api/${db_name}/${id}`, method: "DELETE" });
+      setDataList(dataList.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Deletion error: ", error);
     }
   };
 
