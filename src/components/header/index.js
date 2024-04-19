@@ -1,34 +1,27 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { deleteCookie, getCookie } from "cookies-next";
 import { useRouter, usePathname } from "next/navigation";
 import Button from "@/components/UI/Button";
 import "./styles.scss";
 
-const Index = ({ token }) => {
+const Index = () => {
     const router = useRouter();
 
-    const pathname = usePathname();
+    const token = getCookie("token");
 
-    console.log("ok : ", token);
+    const pathname = usePathname();
 
     const handleLogout = () => {
         deleteCookie("token");
         router.push("/login");
-        window.location.reload();
     };
 
     const isActiveLink = (href) => {
         return pathname === href;
     };
 
-    console.log(pathname);
-    if (token === undefined && isActiveLink("/")) {
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
-    }
     return (
         <header className="header">
             <div className="header__logo">
@@ -73,9 +66,7 @@ const Index = ({ token }) => {
                         <Button title={"Logout"} clickHandler={handleLogout} />
                     </div>
                 </div>
-            ) : (
-                <div></div>
-            )}
+            ) : null}
         </header>
     );
 };
